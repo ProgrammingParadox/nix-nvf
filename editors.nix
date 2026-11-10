@@ -53,6 +53,15 @@ in {
             shiftwidth = 2;
 
             clipboard = "unnamedplus";
+
+            foldmethod = "expr";
+            foldexpr = "v:lua.vim.treesitter.foldexpr()";
+            foldlevel = 99;
+            foldlevelstart = 99;
+
+            # smartindent = false;
+            # cindent = false;
+            # indentexpr = "";
           };
 
           spellcheck.enable = false;
@@ -102,6 +111,9 @@ in {
 
           statusline.lualine = {
             enable = true;
+
+            integrations.breadcrumbs.navbuddy.enable = true;
+            integrations.breadcrumbs.nvim-navic.enable = true;
           };
 
           theme = {
@@ -113,7 +125,43 @@ in {
 
           autopairs.nvim-autopairs.enable = true;
 
-          autocomplete.blink-cmp.enable = true;
+          autocomplete.blink-cmp = {
+            enable = true;
+
+            setupOpts.keymap = lib.mkForce {
+              preset = "none";
+
+              "<Tab>" = [
+                "select_and_accept"
+                "fallback"
+              ];
+
+              "<S-Tab>" = [
+                "select_prev"
+                "fallback"
+              ];
+
+              "<CR>" = [
+                "fallback"
+              ];
+
+              "<Up>" = [
+                "select_prev"
+                "fallback"
+              ];
+
+              "<Down>" = [
+                "select_next"
+                "fallback"
+              ];
+
+              "<C-Space>" = [
+                "show"
+                "show_documentation"
+                "hide_documentation"
+              ];
+            };
+          };
 
           snippets.luasnip.enable = false;
 
@@ -131,7 +179,21 @@ in {
             update_n_lines = "<leader>sn";
           };
 
+          extraPackages = [pkgs.powershell pkgs.powershell-editor-services];
+
           treesitter.context.enable = true;
+          treesitter.grammars = [pkgs.tree-sitter-grammars.tree-sitter-powershell];
+          lsp.servers.powershell_es = {
+            bundle_path = "${pkgs.powershell-editor-services}/lib/powershell-editor-services";
+            filetypes = ["ps1" "psm1" "psd1"];
+            settings = {
+              powershell = {
+                codeFormatting = {
+                  Preset = "OTBS";
+                };
+              };
+            };
+          };
 
           binds = {
             whichKey.enable = true;
@@ -161,6 +223,12 @@ in {
             grug-far-nvim.enable = true;
             motion.flash-nvim.enable = true;
             motion.flash-nvim.mappings.toggle = "<leader>sf";
+
+            csvview = {
+              enable = true;
+
+              setupOpts.view.display_mode = "border";
+            };
           };
 
           notes.todo-comments.enable = true;
@@ -169,10 +237,6 @@ in {
             borders.enable = true;
             colorizer.enable = true;
             illuminate.enable = true;
-            breadcrumbs = {
-              enable = true;
-              navbuddy.enable = true;
-            };
             fastaction.enable = true;
           };
 
